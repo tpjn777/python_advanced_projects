@@ -30,18 +30,22 @@ def handle_clients(conn,address):
             conn.send(bytes("#quit", "utf8"))
             conn.close()
             del clients[conn]
-            broadcasts(bytes(name +"Has Left the CHat Room"))
+            broadcast(bytes(name +"Left the CHat Room"))
 
 
 def accept_client_connections():
 
     while True:
         client_conn,client_address= sock.accept()
-        print(client_address," Has connected succefully ")
-        client_conn.send("Welcome te the Chaty, Please type ypur name to continue".encode('utf8'))
+        print(client_address," Has connected successfully ")
+        client_conn.send("Welcome te the Chaty, Please type your name to continue".encode('utf8'))
         addresses[client_conn]=client_address
 
         Thread(target=handle_clients,args=(client_conn, client_address)).start()
+
+def broadcast(msg, prefix):
+    for c in clients:
+        c.send(bytes(prefix, "utf8")+msg)
 
 
 
